@@ -4,7 +4,7 @@ const Lib = loadLib(sequelize);
 const loadFn = require('../models/Function');
 const Fn = loadFn(sequelize);
 
-exports.compile = async (req, res) => {
+exports.use = async (req, res) => {
 console.log("DEBUG: use lib, "+req.params.name)
     global[req.params.name]={};
 
@@ -20,12 +20,36 @@ console.log("DEBUG: use lib, "+req.params.name)
     });
 }
 
-exports.create = async (req, res) => {
+exports.add = async (req, res) => {
   try {
-    console.log("DEBUG request: library create, ",req.body.name);
+    console.log("DEBUG request: library create, ",req.params.name);
 
-    const { name, doc } = req.body;
+    const { doc } = req.body;
+    const name = req.params.name;
+  
     const lib = await Lib.create({name, doc});
+
+    res.status(201).json({
+      success: true,
+      lib: { name: lib.name },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+exports.upd = async (req, res) => {
+  try {
+    console.log("DEBUG request: library update, ",req.params.name);
+
+    const { doc } = req.body;
+    const name = req.params.name;
+  
+    const lib = await Lib.findByPk(req.params.name);
+    if (!lib) return res.status(404).json({ error: 'Library not found' });
+
+    lib.doc = doc;
+    await lib.save();
 
     res.status(201).json({
       success: true,
@@ -44,9 +68,21 @@ exports.get = async (req, res) => {
   res.json({ success: true, doc: lib.doc });
 };
 
-exports.getAll = async (req, res) => {
+exports.all = async (req, res) => {
   console.log("DEBUG request: libraries list");
 
   const libs = await Lib.findAll();
   res.json({ success: true, data: libs });
+};
+
+exports.del = async (req, res) => {
+  console.log("DEBUG library delete, ",req.params.name);
+
+  await Fn.destroy({where: {lib: req.params.name}});
+
+  const libs = await Lib.findAll({ where: {name: req.params.name} });
+  if (libs.length==0) return res.status(404).json({ error: 'Library not found' });
+  await libs[0].destroy();
+
+  res.json({ success: true, name: libs[0].name });
 };
