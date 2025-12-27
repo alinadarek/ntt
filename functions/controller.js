@@ -53,11 +53,11 @@ exports.upd = async (req, res) => {
 };
 
 exports.get = async (req, res) => {
-  console.log("DEBUG request: function get, ",req.params.id);
+  console.log("DEBUG request: function get, ",req.params.name);
 
-  const fn = await Fn.findByPk(req.params.id);
-  if (!fn) return res.status(404).json({ error: 'Function not found' });
-  res.json({ success: true, name: fn.name, doc: fn.doc, lib: fn.lib, body: fn.body });
+  const fns = await Fn.findAll({ where: {name: req.params.name, lib: req.params.lib} });
+  if (fns.length==0) return res.status(404).json({ error: 'Function not found' });
+  res.json({ success: true, id: fns[0], doc: fns[0].doc, body: fns[0].body });
 };
 
 exports.all = async (req, res) => {
