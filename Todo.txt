@@ -1,0 +1,7 @@
+-consistent errors handling
+-returning all errors in response
+-check jobs before scheduler deletion
+-failed jobs
+-creating jobs from functions
+-calling jobs with args
+-doc for all functions
