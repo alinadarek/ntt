@@ -23,7 +23,7 @@ exports.schrun = (name) => {
         //scheduler is paused
       } else {
         console.log(`Processing job: ${job.id}`);
-        eval("global."+job.data.lib+"."+job.data.fn+"()");
+        eval("global."+job.data.lib+"."+job.data.fn+job.data.args);
       }
     });
 
@@ -39,24 +39,24 @@ exports.schend = (name) => {
   }
 }
 
-exports.run = (name, sch, lib, fn, delay, repeat_every, repeat_limit, cron) => {
+exports.run = (name, sch, lib, fn, args, delay, repeat_every, repeat_limit, cron) => {
   console.log("Starting job",name,"on scheduler",sch);
 
   if (delay != null) {
-    jobsQueue.add(sch, { lib: lib, fn: fn }, {delay: delay});
+    jobsQueue.add(sch, { lib: lib, fn: fn, args: args}, {delay: delay});
     return;
   } 
   if (repeat_every != null && repeat_limit != null) {
-    jobsQueue.add(sch, { lib: lib, fn: fn }, {repeat: {every: repeat_every, limit: repeat_limit}});
+    jobsQueue.add(sch, { lib: lib, fn: fn, args: args }, {repeat: {every: repeat_every, limit: repeat_limit}});
     return;
   }
   if (cron != null) {
-    jobsQueue.add(sch, { lib: lib, fn: fn }, {repeat: { cron: cron }});
+    jobsQueue.add(sch, { lib: lib, fn: fn, args: args }, {repeat: { cron: cron }});
     return;
   } 
   if (delay == null && repeat_every == null && repeat_limit == null && cron == null) {
     console.log("job added","fn:",fn,"lib",lib,"sch",sch)
-    jobsQueue.add(sch, { lib: lib, fn: fn });
+    jobsQueue.add(sch, { lib: lib, fn: fn, args: args });
     return;
   } 
   console.error("Problem with job definition.")

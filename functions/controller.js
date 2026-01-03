@@ -77,6 +77,7 @@ exports.run = async (req, res) => {
  
     const args = req.body.args;
     const iife="(function ret() {return global."+req.params.lib+"."+fns[0].name+args+"})()";
+    console.log("DEBUG iife",iife);
     const ret=eval(iife);
     res.json({ success: true, data: ret });
 };

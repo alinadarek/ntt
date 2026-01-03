@@ -6,6 +6,7 @@ const JobModel = {
   sch: { type: DataTypes.STRING, allowNull: false },
   lib: { type: DataTypes.STRING, allowNull: false },
   fn: { type: DataTypes.STRING, allowNull: false },
+  args: { type: DataTypes.STRING, allowNull: false },
   delay: { type: DataTypes.SMALLINT, allowNull: true },
   repeat_every: { type: DataTypes.SMALLINT, allowNull: true },
   repeat_limit: { type: DataTypes.SMALLINT, allowNull: true },

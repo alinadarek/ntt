@@ -7,7 +7,7 @@ exports.run = async (req, res) => {
 console.log("DEBUG: run job, "+req.params.name)
     
     const job = await Job.findByPk(req.params.name);
-    scheduler.run(job.name, job.sch, job.lib, job.fn, job.delay, job.repeat_every, job.repeat_limit, job.cron);
+    scheduler.run(job.name, job.sch, job.lib, job.fn, job.args, job.delay, job.repeat_every, job.repeat_limit, job.cron);
 
     res.status(201).json({
       success: true,

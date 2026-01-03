@@ -9,6 +9,13 @@ const init = require("./common/init");
 //create db
 sequelize.sync();
 
+//initiate globals
+init.initvars();
+init.initsys();
+init.initlib();
+init.initfn();
+init.initsch();
+
 //create www server
 const app = express();
 app.use(express.json());
@@ -16,11 +23,6 @@ app.use('/', functionsRoutes);
 app.use('/', librariesRoutes);
 app.use('/', jobsRoutes);
 app.use('/', schedulersRoutes);
-
-//initiate globals
-init.initlib();
-init.initfn();
-init.initsch();
 
 //general routes
 app.get('/status', (req, res) => {

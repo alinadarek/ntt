@@ -5,6 +5,7 @@ const loadFn = require('../models/Function');
 const Fn = loadFn(sequelize);
 const loadLib = require('../models/Library');
 const Lib = loadLib(sequelize);
+const scheduler = require('./scheduler');
 
 exports.initsch = async () => {
   global.schedulers={};
@@ -33,4 +34,15 @@ exports.initlib = async () => {
     console.log("init library",lib.name);
     eval("global."+lib.name+"={}");
   });
+}
+
+exports.initsys = async () => { 
+  console.log("init system library");
+  global.sys={};
+  global.sys.jobRun=function (...args) {scheduler.run(...args)};
+}
+
+exports.initvars = async () => { 
+  console.log("init global variables");
+  global.vars={};
 }
